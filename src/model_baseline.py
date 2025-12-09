@@ -1,12 +1,12 @@
 import numpy as np
 import pandas as pd
 
-from .features import FEATURE_COLS, TARGET_COL
+from .config import FEATURE_COLS, TARGET_COL, TEST_SIZE
 from .modeling import train_test_split_time, build_logreg_pipeline
 from .evaluation import evaluate_classifier
 
 
-def train_and_evaluate(df: pd.DataFrame, test_size: float = 0.2):
+def train_and_evaluate(df: pd.DataFrame, test_size: float = TEST_SIZE):
     """
     Entraîne le pipeline logistique de base et affiche les métriques.
     Suppose que df contient déjà les features et la cible (cf. add_features).

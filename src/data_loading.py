@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+from .config import DATA_RAW
 
 
 def load_eurusd(path: str | None = None) -> pd.DataFrame:
@@ -7,8 +8,7 @@ def load_eurusd(path: str | None = None) -> pd.DataFrame:
     Load EUR/USD OHLC data, handle CSV-in-XLSX edge case, clean columns, and sort by date.
     """
     if path is None:
-        project_root = Path(__file__).resolve().parents[1]
-        path = project_root / "data" / "eurusd_d.xlsx"
+        path = DATA_RAW
 
     df = pd.read_excel(path)
 

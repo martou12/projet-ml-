@@ -1,42 +1,43 @@
 import pandas as pd
-
-# colonnes utilisées comme features dans le modèle
-FEATURE_COLS = [
-    "ret_lag1",
-    "ret_lag2",
-    "ret_lag3",
-    "ret_lag5",
-    "ret_rollmean_5",
-    "ret_rollstd_5",
-]
-
-TARGET_COL = "y_up"  # 1 = hausse demain, 0 = baisse/égal
+import numpy as np
+from .config import FEATURE_COLS, TARGET_COL
 
 
 def add_features(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Ajoute les features nécessaires et la cible y_up.
-    On utilise uniquement des infos disponibles au temps t
-    pour prédire la direction du close à t+1.
-    """
     df = df.copy()
 
-    # retour simple quotidien
+    # 1) Return
     df["ret"] = df["close"].pct_change()
 
-    # lags des retours (court terme)
+    # 2) Lags
     for k in [1, 2, 3, 5]:
         df[f"ret_lag{k}"] = df["ret"].shift(k)
 
-    # moyenne et volatilité rolling sur 5 jours
+    # 3) Rolling 5
     df["ret_rollmean_5"] = df["ret"].rolling(5).mean()
     df["ret_rollstd_5"] = df["ret"].rolling(5).std()
 
-    # cible : 1 si close(t+1) > close(t), sinon 0
+    # 4) Internal vol proxies
+    df["ret_rollstd_10"] = df["ret"].rolling(10).std()
+    df["ret_rollstd_20"] = df["ret"].rolling(20).std()
+    df["abs_ret_lag1"] = df["ret"].abs().shift(1)
+
+    # 5) OHLC range proxy
+    if {"high", "low", "close"}.issubset(df.columns):
+        df["range_pct"] = (df["high"] - df["low"]) / df["close"]
+    else:
+        df["range_pct"] = np.nan
+
+    # 6) External VIX lag if present
+    if "vix" in df.columns:
+        df["vix_lag1"] = df["vix"].shift(1)
+
+    # 7) Target
     df["close_tomorrow"] = df["close"].shift(-1)
     df[TARGET_COL] = (df["close_tomorrow"] > df["close"]).astype(int)
 
-    # on enlève les lignes avec NaN (dus aux décalages/rolling)
-    df = df.dropna(subset=FEATURE_COLS + [TARGET_COL])
+    # 8) Dropna after ALL features exist
+    subset = [c for c in FEATURE_COLS if c in df.columns] + [TARGET_COL]
+    df = df.dropna(subset=subset)
 
     return df

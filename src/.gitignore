@@ -1,0 +1,13 @@
+# env
+.venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# generated data & models
+data/processed/
+models/
+
+# notebooks checkpoints
+.ipynb_checkpoints/

@@ -5,11 +5,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
+from .config import FEATURE_COLS, TARGET_COL, TEST_SIZE
 
-from .features import FEATURE_COLS, TARGET_COL
 
-
-def train_test_split_time(df, test_size: float = 0.2):
+def train_test_split_time(df, test_size: float = TEST_SIZE):
     """
     Split temporel simple : 80% train, 20% test (par défaut).
     Pas de shuffle.
