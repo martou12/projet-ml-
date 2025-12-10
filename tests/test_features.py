@@ -11,8 +11,8 @@ def _toy_df(n=30, with_vix=True):
         "low": [0.99] * n,  # Simulated low prices
         "close": [1.0, 1.01, 1.02, 1.01, 1.00, 1.02, 1.03, 1.04, 1.03, 1.05,
                   1.06, 1.07, 1.06, 1.05, 1.08, 1.09, 1.10, 1.09, 1.11, 1.12,
-                  1.10, 1.09, 1.08, 1.10, 1.12, 1.13, 1.14, 1.15, 1.14, 1.16],  # Simulated close prices
-    }
+                  1.10, 1.09, 1.08, 1.10, 1.12, 1.13, 1.14, 1.15, 1.14, 1.16],  # Simulated close prices ,unitary tests to test add features
+    }#just creating a ficting dataframe to test values 
     if with_vix:
         data["vix"] = [15.0] * n  # Add VIX column if required
     return pd.DataFrame(data)  # Return DataFrame
@@ -29,9 +29,10 @@ def test_add_features_creates_all_columns_and_no_nan():
 def test_add_features_sets_target_direction():
     df = _toy_df()  # Create toy data
     out = add_features(df)  # Add features to the data
-    for i in range(3):  # Check the first 3 rows after dropna
+    for i in range(3):  # Check the first 3 rows  of the dataframe 
         row = out.iloc[i]
-        assert row[TARGET_COL] == int(row["close_tomorrow"] > row["close"])  # Ensure target is set correctly
+        assert row[TARGET_COL] == int(row["close_tomorrow"] > row["close"])  # Ensure target is set correctly 1 or 0 
+        #1 if tomorrow>close 
 
 
 def test_add_features_handles_missing_vix_column():
