@@ -29,7 +29,7 @@ def test_add_features_creates_all_columns_and_no_nan():
 def test_add_features_sets_target_direction():
     df = _toy_df()
     out = add_features(df)
-    for i in range(3):  # vérifie les trois premières lignes après dropna
+    for i in range(3):  # vérifie les trois premières lignes après dropddd
         row = out.iloc[i]
         assert row[TARGET_COL] == int(row["close_tomorrow"] > row["close"])
 
