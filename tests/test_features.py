@@ -39,3 +39,7 @@ def test_add_features_handles_missing_vix_column():
     df = _toy_df(with_vix=False)  # Create data without the VIX column
     out = add_features(df)  # Add features to the data
     assert "vix_lag1" not in out.columns  # Ensure no vix_lag1 column if vix is missing
+
+# the tests primarily serve to validate the data before it is used to train the model in the notebook.
+#They ensure the validity of the data (absence of NaN, correct columns, proper target logic).
+
