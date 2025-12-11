@@ -39,9 +39,7 @@ def build_logreg_pipeline():
 
 
 def build_decision_tree():
-    """
-    Modèle arbre de décision (standard).
-    """
+    
     return DecisionTreeClassifier(
         max_depth=5,
         min_samples_leaf=50,
@@ -50,9 +48,7 @@ def build_decision_tree():
 
 
 def build_random_forest():
-    """
-    Modèle Random Forest (standard).
-    """
+   
     return RandomForestClassifier(
         n_estimators=300,
         max_depth=6,
