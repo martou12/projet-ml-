@@ -4,10 +4,17 @@
 # python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# generated data & models
+# notebooks
+.ipynb_checkpoints/
+
+# generated
 data/processed/
 models/
+reports/
 
-# notebooks checkpoints
-.ipynb_checkpoints/
+# OS
+.DS_Store
+Thumbs.db

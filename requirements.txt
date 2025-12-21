@@ -4,3 +4,6 @@ matplotlib
 scikit-learn
 jupyter
 xgboost
+ipywidgets
+joblib
+jupyter

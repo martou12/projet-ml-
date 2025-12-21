@@ -7,10 +7,10 @@ from .evaluation import evaluate_classifier
 
 
 def train_and_evaluate(df: pd.DataFrame, test_size: float = TEST_SIZE):
-    """
-    Entraîne le pipeline logistique de base et affiche les métriques.
-    Suppose que df contient déjà les features et la cible (cf. add_features).
-    """
+    
+    #on Entraîne le pipeline logistique de base et affiche les métriques.
+    #on Suppose que df contient déjà les features et la cible (cf. add_features).
+    
     missing = [c for c in FEATURE_COLS + [TARGET_COL] if c not in df.columns]
     if missing:
         raise ValueError(f"Colonnes manquantes pour le modèle: {missing}")

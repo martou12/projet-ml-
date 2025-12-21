@@ -6,7 +6,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from .config import FEATURE_COLS, TARGET_COL, TEST_SIZE
-
+from sklearn.model_selection import TimeSeriesSplit
 
 def train_test_split_time(df, test_size: float = TEST_SIZE):
     """
@@ -75,7 +75,7 @@ def grid_search_timeseries(model, param_grid, X_train, y_train, n_splits: int = 
     Petit GridSearch avec TimeSeriesSplit pour éviter la fuite d'information.
     On optimise la ROC-AUC.
     """
-    cv = TimeSeriesSplit(n_splits=n_splits)
+    cv = TimeSeriesSplit(n_splits=n_splits, gap=1)  # gap=1 pour horizon 1 jour
     gs = GridSearchCV(
         estimator=model,
         param_grid=param_grid,
