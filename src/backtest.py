@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import TimeSeriesSplit
+from sklearn.base import clone
 
 from src.dataset import build_dataset
 from src.modeling import build_logreg_pipeline
@@ -22,6 +23,7 @@ def backtest_pnl(
     fee_per_trade: float = 0.0,        # coût (fraction) payé quand on change de position
     start_date: str | None = None,
     end_date: str | None = None,
+    model=None,
 ):
     """
     Backtest simple walk-forward:
@@ -69,10 +71,17 @@ def backtest_pnl(
         X_train, X_test = X[train_idx], X[test_idx]
         y_train = y[train_idx]
 
-        model = build_logreg_pipeline()
-        model.fit(X_train, y_train)
+        if model is None:
+            model_i = build_logreg_pipeline()
+        else:
+            if callable(model):
+                model_i = model()
+            else:
+                model_i = clone(model)
 
-        proba = model.predict_proba(X_test)[:, 1]
+        model_i.fit(X_train, y_train)
+
+        proba = model_i.predict_proba(X_test)[:, 1]
         preds = (proba >= threshold).astype(int)
 
         proba_all.iloc[test_idx] = proba

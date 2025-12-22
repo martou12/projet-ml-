@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -13,7 +14,17 @@ def train_test_split_time(df, test_size: float = TEST_SIZE):
     Split temporel simple : 80% train, 20% test (par défaut).
     Pas de shuffle.
     """
-    X = df[FEATURE_COLS].values
+    feature_cols = [c for c in FEATURE_COLS if c in df.columns]
+    missing = [c for c in FEATURE_COLS if c not in df.columns]
+    if missing:
+        warnings.warn(
+            "Missing feature columns: " + ", ".join(missing),
+            RuntimeWarning,
+        )
+    if not feature_cols:
+        raise ValueError("No feature columns found in dataframe.")
+
+    X = df[feature_cols].values
     y = df[TARGET_COL].values
 
     n = len(df)
