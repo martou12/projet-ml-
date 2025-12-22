@@ -81,6 +81,17 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
     df[TARGET_COL] = (df["close_tomorrow"] > df["close"]).astype(int)
 
     # --- Drop NA after all features exist ---
-    df = df.dropna(subset=FEATURE_COLS + [TARGET_COL]).reset_index(drop=True)
+    for c in [
+        "vix_lag1",
+        "dgs2_lag1", "dgs10_lag1", "term_spread_lag1",
+        "dtwexbgs_ret_lag1",
+        "sp500_ret_lag1",
+    ]:
+        if c in df.columns:
+            df[c] = df[c].fillna(0.0)
+
+    # --- Drop NA only for columns that exist (utile si include_sp500=False etc.) ---
+    subset = [c for c in FEATURE_COLS if c in df.columns] + [TARGET_COL]
+    df = df.dropna(subset=subset).reset_index(drop=True)
 
     return df
