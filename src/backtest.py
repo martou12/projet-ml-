@@ -165,6 +165,7 @@ def backtest_pnl(
     # ------------------------------------------------------------------
     max_dd = float(((equity / equity.cummax()) - 1.0).min())
     trade_rate = float((pos != 0.0).mean())
+    entry_flag = ((pos != 0.0) & (pos.shift(1).fillna(0.0) == 0.0)).astype(int)
 
     mu = float(strat_ret.mean())
     sig = float(strat_ret.std())
@@ -179,7 +180,7 @@ def backtest_pnl(
         "pnl_pct": float((equity.iloc[-1] / capital_init - 1.0) * 100.0),
         "max_drawdown_pct": float(max_dd * 100.0),
         "trade_rate_nonzero": trade_rate,
-        "n_trades": int(trade_flag.sum()),
+        "n_trades": int(entry_flag.sum()),
         "sharpe_annualized": float(sharpe),
     }
 
